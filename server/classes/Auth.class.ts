@@ -14,7 +14,10 @@ export default class Auth {
    */
   public async login(email: string, password: string): Promise<boolean> {
     const query = "SELECT * FROM user WHERE email = ?";
-    const result = await db.query(query, [email]);
+    const result = await db.query({
+      query: query,
+      values: [email],
+    });
     if (result.length === 0) return false;
     const user = result[0] as any;
     return await this.comparePassword(password, user.password);
@@ -42,12 +45,10 @@ export default class Auth {
     password = await this.hashPassword(password);
     const query =
       "INSERT INTO user (user_id, pseudo, email, password) VALUES (?, ?, ?, ?)";
-    const result: { affectedRows: number }[] = await db.query(query, [
-      generateUUID(),
-      pseudo,
-      email,
-      password,
-    ]);
+    const result: { affectedRows: number }[] = await db.query({
+      query: query,
+      values: [generateUUID(), pseudo, email, password],
+    });
     await this.sendConfirmationEmail(email);
     return db.checkResult(result);
   }
@@ -98,7 +99,10 @@ export default class Auth {
    */
   public async getUserByPseudo(pseudo: string): Promise<any | null[]> {
     const query = "SELECT * FROM users WHERE pseudo = ?";
-    const user = await db.query(query, [pseudo]);
+    const user = await db.query({
+      query: query,
+      values: [pseudo],
+    });
     return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
@@ -110,7 +114,10 @@ export default class Auth {
    */
   public async getUserById(uuid: string): Promise<any | null[]> {
     const query = "SELECT * FROM user WHERE user_id = ?";
-    const user = await db.query(query, [uuid]);
+    const user = await db.query({
+      query: query,
+      values: [uuid],
+    });
     return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
@@ -122,7 +129,10 @@ export default class Auth {
    */
   public async getUserByEmail(email: string): Promise<any | null[]> {
     const query = "SELECT * FROM users WHERE email = ?";
-    const user = await db.query(query, [email]);
+    const user = await db.query({
+      query: query,
+      values: [email],
+    });
     return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
@@ -156,7 +166,10 @@ export default class Auth {
     if (!user) return false;
 
     const query = "UPDATE user SET is_verified = 1 WHERE user_id = ?";
-    const result: { affectedRows: number }[] = await db.query(query, [uuid]);
+    const result: { affectedRows: number }[] = await db.query({
+      query: query,
+      values: [uuid],
+    });
     return db.checkResult(result);
   }
 
@@ -192,10 +205,10 @@ export default class Auth {
   ): Promise<boolean> {
     password = await this.hashPassword(password);
     const query = "UPDATE user SET password = ? WHERE user_id = ?";
-    const result: { affectedRows: number }[] = await db.query(query, [
-      password,
-      uuid,
-    ]);
+    const result: { affectedRows: number }[] = await db.query({
+      query: query,
+      values: [password, uuid],
+    });
     return db.checkResult(result);
   }
 

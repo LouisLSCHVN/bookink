@@ -1,4 +1,9 @@
-import { createPool, Pool } from "mysql2/promise";
+import { createPool, Pool, SslOptions } from "mysql2/promise";
+
+interface Options {
+  query: string;
+  values?: any[];
+}
 
 /**
  * Class to handle SQL queries
@@ -31,21 +36,19 @@ export default class Sql {
 
   /**
    * Execute a query and return the result
-   *
    * @static
    * @template T
-   * @param {string} query
-   * @param {any[]} [params]
-   * @return {*}  {Promise<T[]>}
+   * @param {Options} { query, values }
+   * @return {*} {Promise<T[]>}
    * @memberof Sql
    */
-  public async query<T>(query: string, params?: unknown[]): Promise<T[]> {
+  public async query<T>({ query, values }: Options): Promise<T[]> {
     if (!query) throw new Error("Query is cannot be empty");
 
     const pool = Sql.connect();
 
     try {
-      const [rows] = await pool.query(query, params);
+      const [rows] = await pool.query(query, values);
       return rows as T[];
     } catch (error) {
       console.error("Database query error: ", error);
