@@ -20,3 +20,16 @@ Dans la class user :
 ce sera un backend en classes, api et controller, donc les méthodes seront écrites dans les classes, ensuite utiliser dans les controllers puis récupéré pour les routes.
 
 [INSPIRATION](https://github.com/hastackdev/nuxt3-blog)
+
+TODO:
+
+- Class Auth =>
+  - [X] hashPassword,
+  - [X] comparePassword,
+  - [ ] SendResetPasswordEmail,
+  - [ ] ResetPassword,
+- Class user =>
+  - [ ] setCookie,
+  - [ ] getCookie,
+  - [ ] isLogged,
+  - [ ] getCookieId,

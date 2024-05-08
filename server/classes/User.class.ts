@@ -1,16 +1,25 @@
-import Sql from "./Sql.class";
-
 export default class User {
-    constructor(private username: string, private email: string, private password: string) {}
+  /**
+   * Check if user exists
+   * @param {string} pseudo
+   * @return {*}  {Promise<boolean>}
+   * @memberof Auth
+   */
+  public async userExists(pseudo: string): Promise<boolean> {
+    const query = "SELECT * FROM users WHERE pseudo = ?";
+    const users = await db.query(query, [pseudo]);
+    return db.checkArr(users);
+  }
 
-    static createAccount(username: string, email: string, password: string): User {
-        const hashedPassword = this.hashPassword(password);
-        return new User(username, email, hashedPassword);
-    }
-
-    private static hashPassword(password: string): string {
-        // Implement password hashing logic here
-        // Example: return bcrypt.hashSync(password, saltRounds);
-        return password;
-    }
+  /**
+   * Check if email exists
+   * @param {string} email
+   * @return {*}  {Promise<boolean>}
+   * @memberof Auth
+   */
+  public async emailExists(email: string): Promise<boolean> {
+    const query = "SELECT * FROM users WHERE email = ?";
+    const users = await db.query(query, [email]);
+    return db.checkArr(users);
+  }
 }

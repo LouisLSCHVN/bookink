@@ -1,4 +1,6 @@
 import { db } from "../utils/database";
+import bcrypt from "bcrypt";
+
 export default class Auth {
   /**
    * Login a user
@@ -27,6 +29,8 @@ export default class Auth {
     email: string,
     password: string
   ): Promise<boolean> {
+    // Hash the password
+    password = await this.hashPassword(password);
     const query =
       "INSERT INTO user (user_id, pseudo, email, password) VALUES (?, ?, ?, ?)";
     const result: { affectedRows: number }[] = await db.query(query, [
@@ -38,27 +42,14 @@ export default class Auth {
     return db.checkResult(result);
   }
 
-  /**
-   * Check if user exists
-   * @param {string} pseudo
-   * @return {*}  {Promise<boolean>}
-   * @memberof Auth
-   */
-  public async userExists(pseudo: string): Promise<boolean> {
-    const query = "SELECT * FROM users WHERE pseudo = ?";
-    const users = await db.query(query, [pseudo]);
-    return db.checkArr(users);
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 
-  /**
-   * Check if email exists
-   * @param {string} email
-   * @return {*}  {Promise<boolean>}
-   * @memberof Auth
-   */
-  public async emailExists(email: string): Promise<boolean> {
-    const query = "SELECT * FROM users WHERE email = ?";
-    const users = await db.query(query, [email]);
-    return db.checkArr(users);
+  public async comparePassword(
+    password: string,
+    hash: string
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hash);
   }
 }
