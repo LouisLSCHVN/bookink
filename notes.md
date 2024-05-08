@@ -13,12 +13,12 @@ ce sera un backend en classes, api et controller, donc les méthodes seront écr
 TODO:
 
 - Class Auth =>
-  - [X] hashPassword,
-  - [X] comparePassword,
-  - [ ] SendResetPasswordEmail,
-  - [ ] ResetPassword,
-- Class user =>
-  - [X] setCookie,
-  - [X] getCookie,
-  - [X] isLogged,
-  - [ ] getCookieId,
+  - [x] hashPassword,
+  - [x] comparePassword,
+  - [x] SendResetPasswordEmail,
+  - [x] ResetPassword,
+- Class Session =>
+  - [x] setCookie,
+  - [x] getCookie,
+  - [x] isLogged,
+  - [x] getCookieId,

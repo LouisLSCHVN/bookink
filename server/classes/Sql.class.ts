@@ -1,5 +1,11 @@
 import { createPool, Pool } from "mysql2/promise";
 
+/**
+ * Class to handle SQL queries
+ *
+ * @export
+ * @class Sql
+ */
 export default class Sql {
   private static pool: Pool | null = null;
 

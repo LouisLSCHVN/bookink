@@ -8,4 +8,6 @@ bun i -D @types/uuid
 
 bun i bcrypt
 bun i --save-dev @types/bcrypt
+
+bun install nodemailer
 ```

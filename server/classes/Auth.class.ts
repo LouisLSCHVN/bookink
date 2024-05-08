@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
-import * as session from "jsonwebtoken";
+import Session from "./Session.class";
+import Mail from "./Mail.class";
 
 // Path: server/classes/Auth.class.ts
 export default class Auth {
@@ -12,13 +13,16 @@ export default class Auth {
    * @memberof Auth
    */
   public async login(email: string, password: string): Promise<boolean> {
-    const query = "SELECT * FROM users WHERE email = ? AND password = ?";
-    const users = await db.query(query, [email, password]);
-    return db.checkArr(users);
+    const query = "SELECT * FROM user WHERE email = ?";
+    const result = await db.query(query, [email]);
+    if (result.length === 0) return false;
+    const user = result[0] as any;
+    return await this.comparePassword(password, user.password);
   }
 
   /**
    * Signup a user
+   * Validate the user, hash the password, and send a confirmation email
    * @param {string} pseudo
    * @param {string} email
    * @param {string} password
@@ -30,6 +34,10 @@ export default class Auth {
     email: string,
     password: string
   ): Promise<boolean> {
+    // Check if the user already exists
+    const user = await this.getUserByEmail(email);
+    if (user) return false;
+
     // Hash the password
     password = await this.hashPassword(password);
     const query =
@@ -40,6 +48,7 @@ export default class Auth {
       email,
       password,
     ]);
+    await this.sendConfirmationEmail(email);
     return db.checkResult(result);
   }
 
@@ -90,7 +99,7 @@ export default class Auth {
   public async getUserByPseudo(pseudo: string): Promise<any | null[]> {
     const query = "SELECT * FROM users WHERE pseudo = ?";
     const user = await db.query(query, [pseudo]);
-    return db.checkArr(user) ? user[0] : null;
+    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
   /**
@@ -102,7 +111,7 @@ export default class Auth {
   public async getUserById(uuid: string): Promise<any | null[]> {
     const query = "SELECT * FROM user WHERE user_id = ?";
     const user = await db.query(query, [uuid]);
-    return db.checkArr(user) ? user[0] : null;
+    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
   /**
@@ -114,76 +123,90 @@ export default class Auth {
   public async getUserByEmail(email: string): Promise<any | null[]> {
     const query = "SELECT * FROM users WHERE email = ?";
     const user = await db.query(query, [email]);
-    return db.checkArr(user) ? user[0] : null;
-  }
-}
-
-class Session {
-  private JWT_SECRET: string = process.env.JWT_SECRET!;
-
-  /**
-   * Check if JWT_SECRET is defined
-   * @memberof Session
-   */
-  public checkJWTSecret(): void {
-    if (!this.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined");
-    }
+    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
   /**
-   * Generate a token
-   * @param {string} user_id
-   * @return {*}  {string}
-   * @memberof Session
+   * Send a confirmation email
+   * @param {string} email
+   * @return {*}  {Promise<void>}
+   * @memberof Auth
    */
-  public generateToken(user_id: string): string {
-    this.checkJWTSecret();
-    return session.sign({ user_id }, this.JWT_SECRET!, {
-      expiresIn: "7d",
+  public async sendConfirmationEmail(email: string): Promise<void> {
+    const user = await this.getUserByEmail(email);
+    if (!user) return;
+
+    const mail = new Mail();
+    await mail.send({
+      from: Mail.MAIL_ADDRESS,
+      to: email,
+      subject: "Confirm your email",
+      text: `Click the link to confirm your email: ${process.env.CLIENT_URL}/confirm/${user.user_id}`,
     });
   }
 
   /**
-   * Verify a token
-   * @param {string} token
-   * @return {*}  {Promise<string>}
-   * @memberof Session
-   */
-  public async verifyToken(token: string): Promise<string> {
-    this.checkJWTSecret();
-    return session.verify(token, this.JWT_SECRET!) as string;
-  }
-
-  /**
-   * Set a cookie
-   * @param {*} event
+   * Confirm an email
    * @param {string} uuid
-   * @memberof Session
+   * @return {*}  {Promise<boolean>}
+   * @memberof Auth
    */
-  public create(event: any, uuid: string, name: string = "u_token"): void {
-    const token = this.generateToken(uuid);
-    setCookie(event, name, token, {
-      maxAge: 60 * 60 * 24 * 7,
-      httpOnly: true,
+  public async confirmEmail(uuid: string): Promise<boolean> {
+    const user = await this.getUserById(uuid);
+    if (!user) return false;
+
+    const query = "UPDATE user SET is_verified = 1 WHERE user_id = ?";
+    const result: { affectedRows: number }[] = await db.query(query, [uuid]);
+    return db.checkResult(result);
+  }
+
+  /**
+   * Reset a password
+   * @param {string} email
+   * @return {*}  {Promise<void>}
+   * @memberof Auth
+   */
+  public async resetPassword(email: string): Promise<void> {
+    const user = await this.getUserByEmail(email);
+    if (!user) return;
+
+    const mail = new Mail();
+    await mail.send({
+      from: Mail.MAIL_ADDRESS,
+      to: email,
+      subject: "Reset your password",
+      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/reset/${user.user_id}`,
     });
   }
 
   /**
-   * Check if a user is authenticated
-   * @param {*} event
+   * Update a password
+   * @param {string} uuid
+   * @param {string} password
    * @return {*}  {Promise<boolean>}
-   * @memberof Session
+   * @memberof Auth
    */
-  public async check(event: any, name: string = "u_token"): Promise<boolean> {
-    const token = getCookie(event, name);
-    if (!token) return false;
+  public async updatePassword(
+    uuid: string,
+    password: string
+  ): Promise<boolean> {
+    password = await this.hashPassword(password);
+    const query = "UPDATE user SET password = ? WHERE user_id = ?";
+    const result: { affectedRows: number }[] = await db.query(query, [
+      password,
+      uuid,
+    ]);
+    return db.checkResult(result);
+  }
 
-    const validation = await this.verifyToken(token);
-
-    if (!validation) {
-      deleteCookie(event, name);
-    }
-    return !!validation;
+  /**
+   * Return a user without the password
+   * @param {User} user
+   * @return {*}  {Promise<boolean>}
+   * @memberof Auth
+   */
+  public userSaveReturn(user: any): any {
+    delete user.password;
+    return user;
   }
 }
