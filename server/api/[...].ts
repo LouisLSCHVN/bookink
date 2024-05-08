@@ -6,6 +6,7 @@ router.get(
     const query = getQuery(event);
     return {
       message: `Hello ${query.name || "World"}!`,
+      uuid: generateUUID(),
     };
   })
 );
