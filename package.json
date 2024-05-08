@@ -1,0 +1,25 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@types/pg": "^8.11.6",
+    "mysql2": "^3.9.7",
+    "nuxt": "^3.11.2",
+    "pg": "^8.11.5",
+    "uuid": "^9.0.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8",
+    "better-sqlite3": "^9.6.0"
+  }
+}
