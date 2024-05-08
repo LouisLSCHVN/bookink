@@ -23,11 +23,15 @@
 
 - `public async login(email: string, password: string): Promise<boolean>` : this method allows a user to log in.
 - `public async signup(pseudo: string, email: string, password: string): Promise<boolean>` : this method allows a user to sign up.
-- `public async userExists(pseudo: string): Promise<boolean>` : this method checks if a user exists in the database.
-- `public async emailExists(email: string): Promise<boolean>` : this method checks if an email exists in the database.
-
 ---
 
 ### User
 
 `file: server/classes/Auth.class.ts`
+
+**Methods:**
+- `public async getUserById(id: number): Promise<User>` : this method returns a user by its id.
+- `public async getUserByEmail(email: string): Promise<User>` : this method returns a user by its email.
+- `public async getUserByPseudo(pseudo: string): Promise<User>` : this method returns a user by its pseudo.
+- `public async getUserByToken(token: string): Promise<User>` : this method returns a user by its token.
+-
