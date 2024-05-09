@@ -1,4 +1,4 @@
-import * as session from "jsonwebtoken";
+import cookieCreator from "jsonwebtoken";
 import { H3Event } from "h3";
 
 /**
@@ -28,7 +28,7 @@ export default class Session {
    */
   public generateToken(user_id: string): string {
     this.checkJWTSecret();
-    return session.sign({ user_id }, this.JWT_SECRET!, {
+    return cookieCreator.sign({ user_id }, this.JWT_SECRET!, {
       expiresIn: "7d",
     });
   }
@@ -41,7 +41,7 @@ export default class Session {
    */
   public async verifyToken(token: string): Promise<string> {
     this.checkJWTSecret();
-    return session.verify(token, this.JWT_SECRET!) as string;
+    return cookieCreator.verify(token, this.JWT_SECRET!) as string;
   }
 
   /**
