@@ -121,7 +121,7 @@ export async function updatePassword(event: H3Event): Promise<void | object> {
   if (user.email !== body.email)
     return createHttpResponse({ message: "Invalid email" });
 
-  const updated = await auth.updatePassword(body.uuid, body.password);
+  const updated = await auth.updatePassword(uuid, body.password);
   if (!updated)
     return createHttpResponse({
       message: "Password update failed",
@@ -207,7 +207,7 @@ export function profile(event: H3Event) {
  * @param {H3Event} event
  * @return {*}  {(void | object)}
  */
-export async function me(event: H3Event) {
+export async function me(event: H3Event): Promise<any> {
   const token = getCookie(event, "u_token");
   if (!token)
     return createHttpResponse({

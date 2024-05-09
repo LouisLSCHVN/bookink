@@ -96,8 +96,8 @@ export default class Auth extends User {
     await mail.send({
       from: mail.getAddress(),
       to: email,
-      subject: "Confirm your email",
-      text: `Click the link to confirm your email: ${process.env.CLIENT_URL}/api/user/confirm/${user.user_id}`,
+      subject: "Bookink ~ Confirm your email",
+      html: `Click the link to confirm your email: <a href="${process.env.CLIENT_URL}/api/user/confirm/${user.user_id}">Confirm</a>`,
     });
   }
 
@@ -133,7 +133,7 @@ export default class Auth extends User {
       from: mail.getAddress(),
       to: email,
       subject: "Reset your password",
-      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/api/user/reset/${user.user_id}`,
+      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/account/reset-password/${user.user_id}`,
     });
     return sent;
   }
@@ -155,6 +155,9 @@ export default class Auth extends User {
       query: query,
       values: [password, uuid],
     });
+    console.log(result)
+    console.log(db.checkResult(result))
+    console.log(uuid, password)
     return db.checkResult(result);
   }
 }

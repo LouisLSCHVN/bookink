@@ -10,4 +10,6 @@ bun i bcrypt
 bun i --save-dev @types/bcrypt
 
 bun install nodemailer
+
+bun add pinia @pinia/nuxt
 ```

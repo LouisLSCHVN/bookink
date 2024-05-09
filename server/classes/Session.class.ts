@@ -39,9 +39,11 @@ export default class Session {
    * @return {*}  {Promise<string>}
    * @memberof Session
    */
-  public async verifyToken(token: string): Promise<string> {
+  public async verifyToken(token: string): Promise<string | boolean | undefined> {
     this.checkJWTSecret();
-    return cookieCreator.verify(token, this.JWT_SECRET!) as string;
+    const uuid = cookieCreator.verify(token, this.JWT_SECRET!) as { user_id?: string };
+    console.log("uuid recup in verifyToken", uuid);
+    return uuid.user_id || undefined;
   }
 
   /**
