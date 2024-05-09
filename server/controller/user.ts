@@ -12,7 +12,11 @@ export async function signup(event: H3Event): Promise<object> {
   const body = await readBody(event);
 
   const email = await auth.getUserByEmail(body.email);
-  if (email) return createHttpResponse({ message: "Email already exists" });
+  if (email)
+    return createHttpResponse({
+      status: 400,
+      message: "Email already exists",
+    });
 
   const signed = await auth.signup(body.pseudo, body.email, body.password);
   if (!signed) return createHttpResponse({ message: "Signup failed" });
@@ -36,7 +40,11 @@ export async function signup(event: H3Event): Promise<object> {
 export async function login(event: H3Event): Promise<object> {
   const body = await readBody(event);
   const logged = await auth.login(body.email, body.password);
-  if (!logged) return createHttpResponse({ message: "Login failed" });
+  if (!logged)
+    return createHttpResponse({
+      status: 401,
+      message: "Login failed",
+    });
 
   const user = await auth.getUserByEmail(body.email);
   auth.createAccessToken(event, user.user_id);
@@ -48,18 +56,182 @@ export async function login(event: H3Event): Promise<object> {
   });
 }
 
+/**
+ * Confirm email
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
 export async function confirmEmail(event: H3Event): Promise<void | object> {
   const uuid = event.context.params?.uuid?.toString();
-  if (!uuid) return createHttpResponse({ message: "Invalid uuid" });
+  if (!uuid)
+    return createHttpResponse({
+      status: 400,
+      message: "Invalid uuid",
+    });
 
   const user = await auth.getUserById(uuid);
-  if (!user) return createHttpResponse({ message: "User not found" });
+  if (!user)
+    return createHttpResponse({
+      status: 404,
+      message: "User not found",
+    });
 
   const comfirmed = (await auth.confirmEmail(uuid)) as boolean;
-  if (!comfirmed) return createHttpResponse({ message: "Email not confirmed" });
+  if (!comfirmed)
+    return createHttpResponse({
+      message: "Email not confirmed, an error occurred",
+    });
 
   // redirect to /login
   const url = process.env.CLIENT_URL + "/login";
-  console.log(url);
   sendRedirect(event, url);
+}
+
+/**
+ * Forgot password
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export async function forgotPassword(event: H3Event): Promise<void | object> {
+  const body = await readBody(event);
+  const user = await auth.getUserByEmail(body.email);
+  if (!user)
+    return createHttpResponse({
+      status: 404,
+      message: "User not found",
+    });
+
+  const sent = await auth.resetPassword(body.email);
+  if (!sent) return createHttpResponse({ message: "Reset password failed" });
+
+  return createHttpResponse({
+    status: 200,
+    message: "Reset password email sent",
+  });
+}
+
+/**
+ * Update password
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export async function updatePassword(event: H3Event): Promise<void | object> {
+  const body = await readBody(event);
+  const uuid = event.context.params?.uuid?.toString();
+  if (!uuid)
+    return createHttpResponse({
+      status: 404,
+      message: "User not found",
+    });
+
+  const user = await auth.getUserById(uuid);
+  if (user.email !== body.email)
+    return createHttpResponse({ message: "Invalid email" });
+
+  const updated = await auth.updatePassword(body.uuid, body.password);
+  if (!updated)
+    return createHttpResponse({
+      message: "Password update failed",
+    });
+
+  return createHttpResponse({
+    status: 200,
+    message: "Password updated",
+  });
+}
+
+/**
+ * Logout user
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export async function logout(event: H3Event): Promise<void | object> {
+  const token = getCookie(event, "u_token");
+  if (!token)
+    return createHttpResponse({
+      status: 400,
+      message: "User not connected",
+    });
+
+  deleteCookie(event, "u_token");
+  return createHttpResponse({
+    status: 200,
+    message: "User logged out",
+  });
+}
+
+/**
+ * Authenticate user
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export async function authenticate(event: H3Event): Promise<void | object> {
+  const token = getCookie(event, "u_token");
+  if (!token)
+    return createHttpResponse({
+      status: 401,
+      message: "User not connected",
+    });
+
+  const user = await auth.getUserByAccessToken(token);
+  if (!user)
+    return createHttpResponse({
+      status: 401,
+      message: "User not connected",
+    });
+
+  return createHttpResponse({
+    status: 200,
+    message: "User authenticated",
+    data: { user: user },
+  });
+}
+
+/**
+ * Get user profile
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export function profile(event: H3Event) {
+  const pseudo = event.context.params?.uuid?.toString();
+
+  if (!pseudo)
+    return createHttpResponse({
+      status: 404,
+      message: "User not found",
+    });
+
+  const user = auth.getUserByPseudo(pseudo);
+  return createHttpResponse({
+    status: 200,
+    message: "User found",
+    data: { user: user },
+  });
+}
+
+/**
+ * Get current user
+ * @param {H3Event} event
+ * @return {*}  {(void | object)}
+ */
+export async function me(event: H3Event) {
+  const token = getCookie(event, "u_token");
+  if (!token)
+    return createHttpResponse({
+      status: 401,
+      message: "User not connected",
+    });
+
+  const user = await auth.getUserByAccessToken(token);
+  if (!user)
+    return createHttpResponse({
+      status: 401,
+      message: "User not connected",
+    });
+
+  return createHttpResponse({
+    status: 200,
+    message: "User authenticated",
+    data: { user: user },
+  });
 }

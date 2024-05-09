@@ -38,12 +38,15 @@ export default class Mail {
    * @return {*}  {Promise<void>}
    * @memberof Mail
    */
-  public async send(options: any): Promise<void> {
+  public async send(options: any): Promise<Boolean> {
     if (!Mail.transporter) throw new Error("Transporter not initialized");
     try {
-      await Mail.transporter.sendMail(options);
+      const sent = await Mail.transporter.sendMail(options);
+      if (!sent.messageId) return false;
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     }
   }
 

@@ -53,6 +53,10 @@ export default class Auth extends User {
     return db.checkResult(result);
   }
 
+  public async logout(token: string): Promise<boolean> {
+    return await session.deleteToken(token);
+  }
+
   /**
    * Hash a password
    * @param {string} password
@@ -119,16 +123,17 @@ export default class Auth extends User {
    * @return {*}  {Promise<void>}
    * @memberof Auth
    */
-  public async resetPassword(email: string): Promise<void> {
+  public async resetPassword(email: string): Promise<Boolean> {
     const user = await this.getUserByEmail(email);
-    if (!user) return;
+    if (!user) return false;
 
-    await mail.send({
+    const sent = await mail.send({
       from: mail.getAddress(),
       to: email,
       subject: "Reset your password",
       text: `Click the link to reset your password: ${process.env.CLIENT_URL}/api/user/reset/${user.user_id}`,
     });
+    return sent;
   }
 
   /**

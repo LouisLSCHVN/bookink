@@ -64,7 +64,10 @@ export default class Session {
    * @return {*}  {Promise<boolean>}
    * @memberof Session
    */
-  public async check(event: H3Event, name: string = "u_token"): Promise<boolean> {
+  public async check(
+    event: H3Event,
+    name: string = "u_token"
+  ): Promise<boolean> {
     const token = getCookie(event, name);
     if (!token) return false;
 
