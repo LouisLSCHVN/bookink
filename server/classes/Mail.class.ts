@@ -1,6 +1,5 @@
-import { Transporter } from "nodemailer";
 import nodemailer from "nodemailer";
-import { mail } from "../utils/database";
+import { Transporter } from "nodemailer";
 
 /**
  * Mail class (send, init)
@@ -9,9 +8,8 @@ import { mail } from "../utils/database";
  */
 export default class Mail {
   private static transporter: Transporter | null = null;
-  public MAIL_ADDRESS: string = process.env.MAIL_ADDRESS!;
+  public static MAIL_ADDRESS: string = process.env.MAIL_ADDRESS!;
   private static MAIL_PASS: string = process.env.MAIL_PASS!;
-  static MAIL_ADDRESS: string | undefined;
 
   constructor() {
     Mail.init();
@@ -47,5 +45,14 @@ export default class Mail {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  /**
+   * Get the mail address
+   * @return {*}  {string}
+   * @memberof Mail
+   */
+  public getAddress(): string {
+    return Mail.MAIL_ADDRESS;
   }
 }

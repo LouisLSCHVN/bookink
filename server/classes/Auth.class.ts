@@ -88,7 +88,7 @@ export default class Auth extends User {
     if (!user) return;
 
     await mail.send({
-      from: mail.MAIL_ADDRESS,
+      from: mail.getAddress(),
       to: email,
       subject: "Confirm your email",
       text: `Click the link to confirm your email: ${process.env.CLIENT_URL}/api/user/confirm/${user.user_id}`,
@@ -124,7 +124,7 @@ export default class Auth extends User {
     if (!user) return;
 
     await mail.send({
-      from: mail.MAIL_ADDRESS,
+      from: mail.getAddress(),
       to: email,
       subject: "Reset your password",
       text: `Click the link to reset your password: ${process.env.CLIENT_URL}/api/user/reset/${user.user_id}`,

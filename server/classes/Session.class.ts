@@ -1,4 +1,5 @@
 import * as session from "jsonwebtoken";
+import { H3Event } from "h3";
 
 /**
  * Session class (generateToken, verifyToken, create, checkCookie)
@@ -45,11 +46,11 @@ export default class Session {
 
   /**
    * Set a cookie
-   * @param {*} event
+   * @param {H3Event} event
    * @param {string} uuid
    * @memberof Session
    */
-  public create(event: any, uuid: string, name: string = "u_token"): void {
+  public create(event: H3Event, uuid: string, name: string = "u_token"): void {
     const token = this.generateToken(uuid);
     setCookie(event, name, token, {
       maxAge: 60 * 60 * 24 * 7,
@@ -59,11 +60,11 @@ export default class Session {
 
   /**
    * Check if a user is authenticated
-   * @param {*} event
+   * @param {H3Event} event
    * @return {*}  {Promise<boolean>}
    * @memberof Session
    */
-  public async check(event: any, name: string = "u_token"): Promise<boolean> {
+  public async check(event: H3Event, name: string = "u_token"): Promise<boolean> {
     const token = getCookie(event, name);
     if (!token) return false;
 

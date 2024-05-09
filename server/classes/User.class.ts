@@ -1,4 +1,5 @@
 import { session } from "../utils/database";
+import { H3Event } from "h3";
 
 export default class User {
   /**
@@ -68,5 +69,15 @@ export default class User {
       values: [email],
     });
     return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
+  }
+
+  public createAccessToken(event: H3Event, user_id: string): boolean {
+    try {
+      const token = session.generateToken(user_id);
+      session.create(event, token);
+    } catch (error) {
+      return false;
+    }
+    return true;
   }
 }
