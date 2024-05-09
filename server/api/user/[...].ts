@@ -5,7 +5,7 @@ const router = createRouter();
 
 router.get(
   "/comfirm/:uuid",
-  defineEventHandler(async (event) => {
+  defineEventHandler(async (event: any) => {
     const query = getQuery(event);
 
     const uuid = query.uuid?.toString();

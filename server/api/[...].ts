@@ -2,7 +2,7 @@ const router = createRouter();
 
 router.get(
   "/hello",
-  defineEventHandler((event) => {
+  defineEventHandler((event: any) => {
     const query = getQuery(event);
 
     const session = useSession(event, { password: generateUUID() });

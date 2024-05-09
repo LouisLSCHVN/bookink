@@ -11,6 +11,7 @@ export default class Mail {
   private static transporter: Transporter | null = null;
   public MAIL_ADDRESS: string = process.env.MAIL_ADDRESS!;
   private static MAIL_PASS: string = process.env.MAIL_PASS!;
+  static MAIL_ADDRESS: string | undefined;
 
   constructor() {
     Mail.init();
@@ -21,10 +22,13 @@ export default class Mail {
    * @memberof Mail
    */
   public static init(): void {
+    if (!this.MAIL_ADDRESS) {
+      throw new Error("MAIL_ADDRESS is not defined");
+    }
     this.transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: mail.MAIL_ADDRESS,
+        user: this.MAIL_ADDRESS,
         pass: this.MAIL_PASS,
       },
     });
