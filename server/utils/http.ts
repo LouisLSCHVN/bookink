@@ -1,15 +1,19 @@
+interface HttpResponse {
+  status?: number;
+  message?: string;
+  data?: object;
+}
+
 /**
  * Send response to the client with status and message
- * @param {number} status - The HTTP status code. Defaults to 500.
- * @param {string} message - The response message. Defaults to "An error has occurred".
- * @param {object} data - Optional data to include in the response, default {}.
+ * @param {HttpResponse} { status, message, data }
  * @returns {object}
  */
-export const createHttpResponse = (
-  status: number = 500,
-  message: string = "An error has occurred",
-  data: object = {}
-): object => {
+export const createHttpResponse = ({
+  status = 500,
+  message = "An error has occurred",
+  data = {},
+}: HttpResponse): object => {
   return {
     status: status,
     message: message,

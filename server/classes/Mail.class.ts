@@ -1,5 +1,6 @@
 import { Transporter } from "nodemailer";
 import nodemailer from "nodemailer";
+import { mail } from "../utils/database";
 
 /**
  * Mail class (send, init)
@@ -8,7 +9,7 @@ import nodemailer from "nodemailer";
  */
 export default class Mail {
   private static transporter: Transporter | null = null;
-  public static MAIL_ADDRESS: string = process.env.MAIL_ADDRESS!;
+  public MAIL_ADDRESS: string = process.env.MAIL_ADDRESS!;
   private static MAIL_PASS: string = process.env.MAIL_PASS!;
 
   constructor() {
@@ -23,7 +24,7 @@ export default class Mail {
     this.transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: this.MAIL_ADDRESS,
+        user: mail.MAIL_ADDRESS,
         pass: this.MAIL_PASS,
       },
     });

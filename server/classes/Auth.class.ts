@@ -1,9 +1,9 @@
+import { mail } from "../utils/database";
+import User from "./User.class";
 import bcrypt from "bcrypt";
-import Session from "./Session.class";
-import Mail from "./Mail.class";
 
 // Path: server/classes/Auth.class.ts
-export default class Auth {
+export default class Auth extends User {
   /**
    * Login a user
    * @static
@@ -78,65 +78,6 @@ export default class Auth {
   }
 
   /**
-   * Get user by token
-   * @param {string} token
-   * @return {*}  {Promise<User>}
-   * @memberof Auth
-   */
-  public async getUserByAccessToken(token: string): Promise<any | null[]> {
-    const session = new Session();
-    const user_id = await session.verifyToken(token);
-    if (!user_id) return null;
-
-    return await this.getUserById(user_id);
-  }
-
-  /**
-   * Get user by pseudo
-   * @param {string} pseudo
-   * @return {*}  {Promise<User>}
-   * @memberof User
-   */
-  public async getUserByPseudo(pseudo: string): Promise<any | null[]> {
-    const query = "SELECT * FROM users WHERE pseudo = ?";
-    const user = await db.query({
-      query: query,
-      values: [pseudo],
-    });
-    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
-  }
-
-  /**
-   * Get user by id
-   * @param {number} uuid
-   * @return {*}  {Promise<User>}
-   * @memberof User
-   */
-  public async getUserById(uuid: string): Promise<any | null[]> {
-    const query = "SELECT * FROM user WHERE user_id = ?";
-    const user = await db.query({
-      query: query,
-      values: [uuid],
-    });
-    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
-  }
-
-  /**
-   * Get user by email
-   * @param {string} email
-   * @return {*}  {Promise<User>}
-   * @memberof User
-   */
-  public async getUserByEmail(email: string): Promise<any | null[]> {
-    const query = "SELECT * FROM users WHERE email = ?";
-    const user = await db.query({
-      query: query,
-      values: [email],
-    });
-    return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
-  }
-
-  /**
    * Send a confirmation email
    * @param {string} email
    * @return {*}  {Promise<void>}
@@ -146,12 +87,11 @@ export default class Auth {
     const user = await this.getUserByEmail(email);
     if (!user) return;
 
-    const mail = new Mail();
     await mail.send({
-      from: Mail.MAIL_ADDRESS,
+      from: mail.MAIL_ADDRESS,
       to: email,
       subject: "Confirm your email",
-      text: `Click the link to confirm your email: ${process.env.CLIENT_URL}/confirm/${user.user_id}`,
+      text: `Click the link to confirm your email: ${process.env.CLIENT_URL}/api/user/confirm/${user.user_id}`,
     });
   }
 
@@ -183,12 +123,11 @@ export default class Auth {
     const user = await this.getUserByEmail(email);
     if (!user) return;
 
-    const mail = new Mail();
     await mail.send({
-      from: Mail.MAIL_ADDRESS,
+      from: mail.MAIL_ADDRESS,
       to: email,
       subject: "Reset your password",
-      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/reset/${user.user_id}`,
+      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/api/user/reset/${user.user_id}`,
     });
   }
 
@@ -210,16 +149,5 @@ export default class Auth {
       values: [password, uuid],
     });
     return db.checkResult(result);
-  }
-
-  /**
-   * Return a user without the password
-   * @param {User} user
-   * @return {*}  {Promise<boolean>}
-   * @memberof Auth
-   */
-  public userSaveReturn(user: any): any {
-    delete user.password;
-    return user;
   }
 }
