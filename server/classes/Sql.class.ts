@@ -74,8 +74,8 @@ export default class Sql {
    * @memberof Sql
    */
   public checkResult(result: any): boolean {
-    if (!result || !result.affectedRows) return false;
-    return this.checkArr(result.affectedRows);
+    if (!result || (!result.affectedRows && !result.insertId)) return false;
+    return true;
   }
 
   /**

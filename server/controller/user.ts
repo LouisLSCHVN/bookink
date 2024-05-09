@@ -11,13 +11,6 @@ const auth = new Auth();
 export async function signup(event: H3Event): Promise<object> {
   const body = await readBody(event);
 
-  const email = await auth.getUserByEmail(body.email);
-  if (email)
-    return createHttpResponse({
-      status: 400,
-      message: "Email already exists",
-    });
-
   const signed = await auth.signup(body.pseudo, body.email, body.password);
   if (!signed) return createHttpResponse({ message: "Signup failed" });
 

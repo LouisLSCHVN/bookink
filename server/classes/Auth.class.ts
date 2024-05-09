@@ -44,17 +44,19 @@ export default class Auth extends User {
     // Hash the password
     password = await this.hashPassword(password);
     const query =
-      "INSERT INTO user (user_id, pseudo, email, password) VALUES (?, ?, ?, ?)";
+      "INSERT INTO user (user_id, pseudo, email, password, double_auth_code) VALUES (?, ?, ?, ?, ?)";
     const result: { affectedRows: number }[] = await db.query({
       query: query,
-      values: [generateUUID(), pseudo, email, password],
+      values: [
+        generateUUID(),
+        pseudo,
+        email,
+        password,
+        this.generateDoubleAuthCode(),
+      ],
     });
     await this.sendConfirmationEmail(email);
     return db.checkResult(result);
-  }
-
-  public async logout(token: string): Promise<boolean> {
-    return await session.deleteToken(token);
   }
 
   /**

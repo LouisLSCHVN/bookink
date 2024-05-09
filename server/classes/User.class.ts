@@ -10,6 +10,7 @@ export default class User {
    */
   public userSaveReturn(user: any): any {
     delete user.password;
+    delete user.double_auth_code;
     return user;
   }
 
@@ -33,7 +34,7 @@ export default class User {
    * @memberof User
    */
   public async getUserByPseudo(pseudo: string): Promise<any | null[]> {
-    const query = "SELECT * FROM users WHERE pseudo = ?";
+    const query = "SELECT * FROM user WHERE pseudo = ?";
     const user = await db.query({
       query: query,
       values: [pseudo],
@@ -63,7 +64,7 @@ export default class User {
    * @memberof User
    */
   public async getUserByEmail(email: string): Promise<any | null[]> {
-    const query = "SELECT * FROM users WHERE email = ?";
+    const query = "SELECT * FROM user WHERE email = ?";
     const user = await db.query({
       query: query,
       values: [email],
@@ -76,8 +77,19 @@ export default class User {
       const token = session.generateToken(user_id);
       session.create(event, token);
     } catch (error) {
+      console.error("Token creation error: ", error);
       return false;
     }
     return true;
+  }
+
+  public generateDoubleAuthCode(): string {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters[randomIndex];
+    }
+    return code.toUpperCase().toString();
   }
 }
