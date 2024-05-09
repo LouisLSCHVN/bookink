@@ -1,20 +1,19 @@
-import * as controlUser from "~/server/controller/user";
+import * as cUser from "~/server/controller/user";
 
 const router = createRouter();
 
-router.post("/signup", defineEventHandler(controlUser.signup));
-router.post("/login", defineEventHandler(controlUser.login));
-router.get("/logout", defineEventHandler(controlUser.logout));
-router.get("/auth", defineEventHandler(controlUser.authenticate));
+// cUser stands for controller user
 
-router.get("/profile/:uuid", defineEventHandler(controlUser.profile));
-router.get("/me", defineEventHandler(controlUser.me));
+router.post("/signup", defineEventHandler(cUser.signup));
+router.post("/login", defineEventHandler(cUser.login));
+router.get("/logout", defineEventHandler(cUser.logout));
+router.get("/auth", defineEventHandler(cUser.authenticate));
 
-router.get("/confirm/:uuid", defineEventHandler(controlUser.confirmEmail));
-router.post("/reset-password", defineEventHandler(controlUser.forgotPassword));
-router.post(
-  "/update-password/:uuid",
-  defineEventHandler(controlUser.updatePassword)
-);
+router.get("/profile/:uuid", defineEventHandler(cUser.profile));
+router.get("/me", defineEventHandler(cUser.me));
+
+router.get("/confirm/:uuid", defineEventHandler(cUser.confirmEmail));
+router.post("/reset-password", defineEventHandler(cUser.forgotPassword));
+router.post("/update-password/:uuid", defineEventHandler(cUser.updatePassword));
 
 export default useBase("/api/user", router.handler);
