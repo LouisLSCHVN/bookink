@@ -132,8 +132,8 @@ export default class Auth extends User {
     const sent = await mail.send({
       from: mail.getAddress(),
       to: email,
-      subject: "Reset your password",
-      text: `Click the link to reset your password: ${process.env.CLIENT_URL}/account/reset-password/${user.user_id}`,
+      subject: "Bookink ~ Reset your password",
+      html: `Click the link to reset your password: <a href="${process.env.CLIENT_URL}/account/reset-password/${user.user_id}">Reset</a>`,
     });
     return sent;
   }
@@ -155,9 +155,9 @@ export default class Auth extends User {
       query: query,
       values: [password, uuid],
     });
-    console.log(result)
-    console.log(db.checkResult(result))
-    console.log(uuid, password)
+    console.log(result);
+    console.log(db.checkResult(result));
+    console.log(uuid, password);
     return db.checkResult(result);
   }
 }
