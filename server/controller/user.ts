@@ -1,5 +1,5 @@
 import { H3Event } from "h3";
-import Auth from "../classes/Auth.class";
+import Auth from "../classes/user/Auth.class";
 
 const auth = new Auth();
 

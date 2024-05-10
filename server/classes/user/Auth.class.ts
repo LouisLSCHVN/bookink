@@ -1,4 +1,4 @@
-import { mail } from "../utils/database";
+import { mail } from "../../utils/database";
 import User from "./User.class";
 import bcrypt from "bcrypt";
 

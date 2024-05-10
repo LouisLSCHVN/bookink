@@ -22,6 +22,7 @@ const state = reactive({
   status: 0,
 });
 
+const router = useRouter();
 const submitLoginForm = async () => {
   const res = await $fetch("/api/user/login", {
     method: "POST",
@@ -30,5 +31,8 @@ const submitLoginForm = async () => {
   console.log(res);
   state.message = res.message;
   state.status = res.status;
+  if (res.status === 200) {
+    router.push("/");
+  }
 };
 </script>

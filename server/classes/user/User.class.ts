@@ -1,4 +1,4 @@
-import { session } from "../utils/database";
+import { session } from "../../utils/database";
 import { H3Event } from "h3";
 
 export default class User {

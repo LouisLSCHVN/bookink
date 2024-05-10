@@ -1,5 +1,5 @@
 import Mail from "../classes/Mail.class";
-import Session from "../classes/Session.class";
+import Session from "../classes/user/Session.class";
 import Sql from "../classes/Sql.class";
 import { v4 as uuid } from "uuid";
 
