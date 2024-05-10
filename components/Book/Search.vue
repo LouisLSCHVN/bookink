@@ -27,15 +27,12 @@ const state = reactive({
   message: "",
 });
 
+const { getBookByTitle } = useGoogleBooks();
 const handleSearchBooks = async () => {
   state.books = [];
-  const res = await $fetch(`/api/book/${search.value}`);
+  const res = await getBookByTitle(search.value);
   console.log(res);
-  if (res.status !== 200 || !res.data) {
-    state.message = res.message || "An error occurred";
-    return;
-  }
-  state.books = res.data.map((book) => ({
+  state.books = res.items.map((book) => ({
     title: book.volumeInfo.title,
     author: book.volumeInfo.authors
       ? book.volumeInfo.authors.map((author) => author).join(", ")

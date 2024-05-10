@@ -21,22 +21,22 @@ router.post(
         message: "Unauthorized",
       });
     const loginUser = await user.getUserByAccessToken(token); // Await the function call to get the user object
-      console.log("loginUser", loginUser)
+    console.log("loginUser", loginUser);
 
     const { book_id, content, rating, spoiler } = body;
     const res = await review.addReview(
-        loginUser.user_id,
-        book_id,
-        content,
-        rating,
-        spoiler
+      loginUser.user_id,
+      book_id,
+      content,
+      rating,
+      spoiler
     );
 
     if (!res)
-        return createHttpResponse({
-            status: 400,
-            message: "Failed to add review",
-        });
+      return createHttpResponse({
+        status: 400,
+        message: "Failed to add review",
+      });
 
     return createHttpResponse({
       status: 200,

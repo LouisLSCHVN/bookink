@@ -18,33 +18,15 @@ const state = reactive({
   reviews: [],
 });
 
-const fetchBook = async () => {
-  const { data: res } = await useFetch(`/api/book/single/${id.value}`);
-  if (res.value.status !== 200) {
-    state.message = res.value.message;
-    return;
+const { getBookById } = useGoogleBooks();
+const books = await getBookById(id.value);
+console.log(books);
+books.items.forEach((item) => {
+  if (item.id === id.value) {
+    book.value = item;
+    console.log("le book en question ", book.value);
   }
-  state.message = res.value.message;
-
-  console.log(res.value);
-
-  getBookById(res.value.data);
-};
-
-const getBookById = (books) => {
-  if (!books) return;
-  if (!books.length) {
-    book.value = books;
-    return;
-  }
-
-  books.forEach((item) => {
-    if (item.id === id.value) {
-      book.value = item;
-      console.log("le book en question ", book.value);
-    }
-  });
-};
+});
 
 const getReviews = async () => {
   const { data: res } = await useFetch("/api/review/" + id.value);
