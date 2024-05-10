@@ -32,6 +32,10 @@ const handleSearchBooks = async () => {
   state.books = [];
   const res = await getBookByTitle(search.value);
   console.log(res);
+  if (!res.items) {
+    state.message = "No books found";
+    return;
+  }
   state.books = res.items.map((book) => ({
     title: book.volumeInfo.title,
     author: book.volumeInfo.authors
@@ -39,6 +43,6 @@ const handleSearchBooks = async () => {
       : "",
     id: book.id,
   }));
-  state.message = res.message;
+  state.message = res.totalItems + " books found";
 };
 </script>

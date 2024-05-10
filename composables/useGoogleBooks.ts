@@ -1,4 +1,4 @@
-const API_KEY = useRuntimeConfig().public.GOOGLE_BOOKS_API_KEY;
+const API_KEY = "AIzaSyB8aAhBXHhMpzeGDhFcRXJJJh5OwM_RttQ";
 const BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
 
 /**
@@ -6,7 +6,8 @@ const BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=";
  * @memberof Book
  */
 function checkKey(): void {
-  if (API_KEY) throw new Error("KEY is not defined");
+  console.log(API_KEY);
+  if (!API_KEY) throw new Error("KEY is not defined");
 }
 
 function useURL(params: string): string {

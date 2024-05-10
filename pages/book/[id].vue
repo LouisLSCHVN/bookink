@@ -40,7 +40,6 @@ const getReviews = async () => {
 };
 
 if (id.value) {
-  fetchBook();
   getReviews();
 }
 </script>
