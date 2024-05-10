@@ -22,3 +22,5 @@ TODO:
   - [x] getCookie,
   - [x] isLogged,
   - [x] getCookieId,
+
+connecter google pour tps : https://nuxt.com/modules/nuxt-vue3-google-signin

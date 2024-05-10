@@ -20,11 +20,12 @@ export default class User {
    * @return {*}  {Promise<User>}
    * @memberof Auth
    */
-  public async getUserByAccessToken(token: string): Promise<any | null[]> {
+  public async getUserByAccessToken(token: string): Promise<any> {
     const user_id = await session.verifyToken(token);
-    if (!user_id) return null;
+    if (!user_id) return false;
 
-    return await this.getUserById(user_id);
+    console.log("user_id DANS GETUSERACCESTOKEN", user_id);
+    return await this.getUserById(user_id.toString());
   }
 
   /**
@@ -48,7 +49,7 @@ export default class User {
    * @return {*}  {Promise<User>}
    * @memberof User
    */
-  public async getUserById(uuid: string): Promise<any | null[]> {
+  public async getUserById(uuid: string): Promise<any> {
     const query = "SELECT * FROM user WHERE user_id = ?";
     const user = await db.query({
       query: query,

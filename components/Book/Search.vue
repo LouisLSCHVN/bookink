@@ -12,7 +12,7 @@
       </p>
       <ul>
         <li v-for="(book, index) in state.books" :key="index">
-          <nuxt-link :to="'/books/' + book.id">
+          <nuxt-link :to="'/book/' + book.id">
             {{ book.title }} by {{ book.author }}
           </nuxt-link>
         </li>

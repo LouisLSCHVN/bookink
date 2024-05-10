@@ -10,6 +10,10 @@ export default class Book {
     if (!this.KEY) throw new Error("KEY is not defined");
   }
 
+  public useURL(params: string): string {
+    return `${this.URL}${params}&hl=en&lang=en&key=${this.KEY}`;
+  }
+
   /**
    * Get a book by its ISBN
    * @param {string} isbn - ISBN of the book
@@ -18,7 +22,7 @@ export default class Book {
    */
   public async getBookByISBN(isbn: string): Promise<any> {
     this.checkKey();
-    const res = await $fetch(`${this.URL}isbn:${isbn}&key=${this.KEY}`);
+    const res = await $fetch(this.useURL(`isbn:${isbn}`));
     return res;
   }
 
@@ -30,7 +34,7 @@ export default class Book {
    */
   public async getBookByTitle(title: string): Promise<any> {
     this.checkKey();
-    const res = await $fetch(`${this.URL}?title:${title}&key=${this.KEY}`);
+    const res = await $fetch(this.useURL(`intitle:${title}&orderBy=relevance`));
     return res;
   }
 
