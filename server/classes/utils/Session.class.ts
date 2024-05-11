@@ -28,9 +28,8 @@ export default class Session {
    */
   public generateToken(user_id: string): string {
     this.checkJWTSecret();
-    return cookieCreator.sign({ user_id }, this.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
+    console.log("user_id dans generateToken", user_id);
+    return cookieCreator.sign({ user_id: user_id }, this.JWT_SECRET!);
   }
 
   /**
@@ -39,9 +38,14 @@ export default class Session {
    * @return {*}  {Promise<string>}
    * @memberof Session
    */
-  public async verifyToken(token: string): Promise<string | boolean | undefined> {
+  public async verifyToken(
+    token: string
+  ): Promise<string | boolean | undefined> {
     this.checkJWTSecret();
-    const uuid = cookieCreator.verify(token, this.JWT_SECRET!) as { user_id?: string };
+    const uuid = cookieCreator.verify(token, this.JWT_SECRET!) as {
+      user_id?: string;
+    };
+    console.log("uuid recup in verifyToken", uuid);
     console.log("uuid recup in verifyToken", uuid);
     return uuid.user_id || undefined;
   }

@@ -159,7 +159,8 @@ export async function logout(event: H3Event): Promise<void | object> {
  * @return {*}  {(void | object)}
  */
 export async function authenticate(event: H3Event): Promise<void | object> {
-  const token = getCookie(event, "u_token");
+  const token = await getCookie(event, "u_token");
+  console.log("token", token);
   if (!token)
     return createHttpResponse({
       status: 401,

@@ -35,6 +35,9 @@ const submitSignupForm = async () => {
   state.status = res.status;
   if (res.status === 200) {
     router.push("/");
+    const user = useUsers();
+    state.data.user = user.data;
+    console.log(user.data);
   }
 };
 </script>

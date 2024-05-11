@@ -75,8 +75,7 @@ export default class User {
 
   public createAccessToken(event: H3Event, user_id: string): boolean {
     try {
-      const token = session.generateToken(user_id);
-      session.create(event, token);
+      session.create(event, user_id);
     } catch (error) {
       console.error("Token creation error: ", error);
       return false;

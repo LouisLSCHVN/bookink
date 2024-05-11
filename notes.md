@@ -24,3 +24,5 @@ TODO:
   - [x] getCookieId,
 
 connecter google pour tps : https://nuxt.com/modules/nuxt-vue3-google-signin
+
+Faire en sorte qu'un user puisse review un livre

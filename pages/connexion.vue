@@ -6,7 +6,5 @@
   <BookSearch />
 </template>
 <script setup>
-definePageMeta({
-  middleware: "guest",
-});
+if (useUsers().auth) useRouter().push("/");
 </script>

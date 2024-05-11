@@ -32,6 +32,9 @@ const submitLoginForm = async () => {
   state.message = res.message;
   state.status = res.status;
   if (res.status === 200) {
+    const user = useUsers();
+    state.data.user = user.data;
+    console.log(user.data);
     router.push("/");
   }
 };
