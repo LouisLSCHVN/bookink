@@ -1,4 +1,4 @@
-import { session } from "../../utils/database";
+import { session } from "../../utils/classes";
 import { H3Event } from "h3";
 
 export default class User {
@@ -73,6 +73,14 @@ export default class User {
     return db.checkArr(user) ? this.userSaveReturn(user[0]) : null;
   }
 
+  /**
+   * Create an access token with the user_id
+   *
+   * @param {H3Event} event
+   * @param {string} user_id
+   * @return {*}  {boolean}
+   * @memberof User
+   */
   public createAccessToken(event: H3Event, user_id: string): boolean {
     try {
       session.create(event, user_id);
@@ -83,6 +91,11 @@ export default class User {
     return true;
   }
 
+  /**
+   * Generate a double auth code
+   * @return {*}  {string}
+   * @memberof User
+   */
   public generateDoubleAuthCode(): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";

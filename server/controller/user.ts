@@ -76,7 +76,7 @@ export async function confirmEmail(event: H3Event): Promise<void | object> {
     });
 
   // redirect to /login
-  const url = process.env.CLIENT_URL + "/login";
+  const url = process.env.CLIENT_URL + "/connexion";
   sendRedirect(event, url);
 }
 
@@ -159,7 +159,7 @@ export async function logout(event: H3Event): Promise<void | object> {
  * @return {*}  {(void | object)}
  */
 export async function authenticate(event: H3Event): Promise<void | object> {
-  const token = await getCookie(event, "u_token");
+  const token = getCookie(event, "u_token");
   console.log("token", token);
   if (!token)
     return createHttpResponse({

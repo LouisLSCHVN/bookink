@@ -38,6 +38,12 @@ export default class Book {
     return res;
   }
 
+  /**
+   * Get a book by its author
+   * @param {string} author - Author of the book
+   * @returns {Promise<any>} - Returns a promise
+   * @memberof Book
+   */
   public async getBookByAuthor(author: string): Promise<any> {
     this.checkKey();
     const res = await $fetch(this.useURL(`inauthor:${author}`));
@@ -53,6 +59,36 @@ export default class Book {
   public async getBookById(id: string): Promise<any> {
     this.checkKey();
     const res = await $fetch(`${this.URL}/${id}&key=${this.KEY}`);
+    return res;
+  }
+
+  /**
+   * Get a book by its category
+   * @param {string} category - Category of the book
+   * @returns {Promise<any>} - Returns a promise
+   * @memberof Book
+   */
+  public async getBookByCategory(category: string): Promise<any> {
+    this.checkKey();
+    const res = await $fetch(this.useURL(`subject:${category}`));
+    return res;
+  }
+
+  /**
+   * Get a book by its publisher
+   * @param {string} publisher - Publisher of the book
+   * @returns {Promise<any>} - Returns a promise
+   * @memberof Book
+   */
+  public async getBookByPublisher(publisher: string): Promise<any> {
+    this.checkKey();
+    const res = await $fetch(this.useURL(`inpublisher:${publisher}`));
+    return res;
+  }
+
+  public async getBookCardInfo(search: string): Promise<any> {
+    this.checkKey();
+    const res = await $fetch(this.useURL(search));
     return res;
   }
 }
