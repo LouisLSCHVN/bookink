@@ -105,4 +105,20 @@ export default class User {
     }
     return code.toUpperCase().toString();
   }
+
+  /**
+   * Update Profile Views
+   * @param {string} user_id
+   * @return {*}  {Promise<boolean>}
+   * @memberof User
+   */
+  public async updateProfileViewsCount(user_id: string): Promise<boolean> {
+    const query =
+      "UPDATE user SET profile_views = profile_views + 1 WHERE user_id = ?";
+    const result = await db.query({
+      query: query,
+      values: [user_id],
+    });
+    return db.checkArr(result);
+  }
 }

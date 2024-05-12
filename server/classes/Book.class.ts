@@ -91,4 +91,8 @@ export default class Book {
     const res = await $fetch(this.useURL(search));
     return res;
   }
+
+  public getMinimalBookInfo(): string {
+    return `?fields=id,volumeInfo(title,authors,description,categories,imageLinks/thumbnail)`;
+  }
 }

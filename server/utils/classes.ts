@@ -1,4 +1,5 @@
 import Book from "../classes/Book.class";
+import Collection from "../classes/Collection.class";
 import Like from "../classes/Like.class";
 import Review from "../classes/Review.class";
 import User from "../classes/user/User.class";
@@ -32,3 +33,5 @@ export const book: Book = new Book();
 export const review: Review = new Review();
 
 export const like = new Like();
+
+export const collection = new Collection();

@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
 import Auth from "../classes/user/Auth.class";
+import { collection } from "../utils/classes";
 
 const auth = new Auth();
 
@@ -18,10 +19,14 @@ export async function signup(event: H3Event): Promise<object> {
   const token = auth.createAccessToken(event, user.user_id);
   if (!token) return createHttpResponse({ message: "Token creation failed" });
 
+  const createdReadList = await collection.createReadList(user.user_id);
+  if (!createdReadList)
+    return createHttpResponse({ message: "ReadList creation failed" });
+
   return createHttpResponse({
     status: 201,
     message: "User signed up",
-    data: { user: user },
+    data: { user: user, collection: createdReadList },
   });
 }
 
@@ -42,10 +47,12 @@ export async function login(event: H3Event): Promise<object> {
   const user = await auth.getUserByEmail(body.email);
   auth.createAccessToken(event, user.user_id);
 
+  const userCollections = await collection.getCollection(user.user_id);
+
   return createHttpResponse({
     status: 200,
     message: "User logged in",
-    data: { user: user },
+    data: { user: user, collection: userCollections},
   });
 }
 

@@ -33,9 +33,12 @@ const submitLoginForm = async () => {
   state.status = res.status;
   if (res.status === 200) {
     const user = useUsers();
-    state.data.user = user.data;
-    console.log(user.data);
-    router.push("/");
+    if (res.data.user) {
+      res.data.user = user.data;
+    }
+    console.log("res from /compo/auth/login.vue", res.data);
+    console.log("user data from /compo/auth/login.vue", user.data);
+    return navigateTo("/");
   }
 };
 </script>

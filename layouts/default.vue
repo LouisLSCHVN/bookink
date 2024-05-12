@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AuthInfo />
     <slot />
   </div>
 </template>
