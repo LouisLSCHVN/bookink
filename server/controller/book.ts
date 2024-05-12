@@ -38,3 +38,22 @@ export const searchByTitle = async (event: H3Event) => {
     data: result.items,
   });
 };
+
+export const byAuthor = async (event: H3Event) => {
+  const query = event.context.params;
+  const author = query?.author;
+  if (!author) return;
+
+  const result = await book.getBookByAuthor(author);
+  if (!result)
+    return createHttpResponse({
+      status: 200,
+      message: "No book found",
+    });
+
+  return createHttpResponse({
+    status: 200,
+    message: "Book found " + result.totalItems,
+    data: result.items,
+  });
+};

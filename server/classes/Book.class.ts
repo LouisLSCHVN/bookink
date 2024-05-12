@@ -38,6 +38,12 @@ export default class Book {
     return res;
   }
 
+  public async getBookByAuthor(author: string): Promise<any> {
+    this.checkKey();
+    const res = await $fetch(this.useURL(`inauthor:${author}`));
+    return res;
+  }
+
   /**
    * Get a book by its ID
    * @param {string} id - ID of the book
