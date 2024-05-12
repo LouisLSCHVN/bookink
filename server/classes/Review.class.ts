@@ -43,10 +43,13 @@ export default class Review {
     });
   }
 
-  public async deleteReview(review_id: string): Promise<Boolean> {
+  public async deleteReview(
+    review_id: string,
+    user_id: string
+  ): Promise<Boolean> {
     const result = await db.query({
-      query: `DELETE FROM review WHERE review_id = ?`,
-      values: [review_id],
+      query: `DELETE FROM review WHERE review_id = ? AND user_id = ?`,
+      values: [review_id, user_id],
     });
     return db.checkResult(result);
   }
