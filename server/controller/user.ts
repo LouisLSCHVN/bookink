@@ -76,7 +76,7 @@ export async function confirmEmail(event: H3Event): Promise<void | object> {
     });
 
   // redirect to /login
-  const url = process.env.CLIENT_URL + "/connexion";
+  const url = process.env.CLIENT_URL + "/connexion ";
   sendRedirect(event, url);
 }
 
