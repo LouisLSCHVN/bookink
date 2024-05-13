@@ -59,6 +59,8 @@ export default class Book {
   public async getBookById(id: string): Promise<any> {
     this.checkKey();
     const res = await $fetch(`${this.URL}/${id}&key=${this.KEY}`);
+    console.log(res);
+    console.log(`${this.URL}/${id}&key=${this.KEY}`);
     return res;
   }
 

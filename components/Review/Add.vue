@@ -3,7 +3,7 @@
     <label for="content">Content</label>
     <textarea v-model="review.content" id="content"></textarea>
     <label for="rating">Rating</label>
-    <input v-model="review.rating" type="number" id="rating" />
+    <input v-model="review.rating" type="number" id="rating" min="0" max="5" />
     <label for="spoiler">Spoiler</label>
     <input v-model="review.spoiler" type="checkbox" id="spoiler" />
     <button type="submit">Submit</button>

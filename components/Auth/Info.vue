@@ -4,11 +4,11 @@
       {{ user.data }}
     </pre
   >
+  <AuthLogout />
   <h1>
-    Auth ? <kbd>{{ auth }}</kbd>
+    Auth ? <kbd>{{ user.auth }}</kbd>
   </h1>
 </template>
 <script setup>
 const user = useUsers();
-const auth = await user.checkAuth();
 </script>

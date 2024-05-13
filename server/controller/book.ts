@@ -3,14 +3,19 @@ import { H3Event } from "h3";
 
 const book = new Book();
 
-export const byID = (event: H3Event) => {
+export const byID = async (event: H3Event) => {
   if (!event.context.params)
     return createHttpResponse({
       status: 400,
       message: "Book ID is required",
     });
-  const uuid = event.context.params.uuid;
-  const books = book.getBookById(uuid);
+  const book_id = event.context.params.id;
+  const books = await book.getBookById(book_id);
+  if (!books)
+    return createHttpResponse({
+      status: 200,
+      message: "Book not found",
+    });
   return createHttpResponse({
     status: 200,
     message: "Book fetched successfully",

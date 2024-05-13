@@ -1,7 +1,11 @@
 <template>
-  <ReviewAdd />
+  <ReviewAdd :book_id="id" />
   <pre><code>{{ book }}</code></pre>
-  <article v-if="state.reviews" v-for="(review, index) in state.reviews">
+  <article
+    v-if="state.reviews"
+    v-for="(review, index) in state.reviews"
+    :key="index"
+  >
     <h3>{{ review.content }}</h3>
     <p>Rating: {{ review.rating }}</p>
     <p>Spoiler: {{ review.spoiler }}</p>
@@ -18,15 +22,16 @@ const state = reactive({
   reviews: [],
 });
 
-const { getBookById } = useGoogleBooks();
-const books = await getBookById(id.value);
-console.log(books);
-books.items.forEach((item) => {
-  if (item.id === id.value) {
-    book.value = item;
-    console.log("le book en question ", book.value);
+const getBookById = async () => {
+  const { data: res } = await useFetch("/api/book/single/" + id.value);
+  console.log(res.value);
+  if (res.value.status !== 200) {
+    state.message = res.value.message;
+    return;
   }
-});
+  state.message = res.value.message;
+  book.value = res.value.data;
+};
 
 const getReviews = async () => {
   const { data: res } = await useFetch("/api/review/" + id.value);
@@ -40,6 +45,7 @@ const getReviews = async () => {
 };
 
 if (id.value) {
+  getBookById();
   getReviews();
 }
 </script>

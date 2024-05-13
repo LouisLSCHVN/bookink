@@ -7,11 +7,12 @@ export default class Collection {
    * @memberof Collection
    */
   public async createReadList(user_id: string): Promise<any> {
+    const collection_id = generateUUID();
     const query =
-      "INSERT INTO collection (user_id, name) VALUES (?, 'ReadList)";
+      "INSERT INTO collection (collection_id, user_id, name) VALUES (?, ?, 'ReadList')";
     const result = await db.query({
       query: query,
-      values: [user_id],
+      values: [collection_id, user_id],
     });
     return db.checkResult(result) ? result : null;
   }

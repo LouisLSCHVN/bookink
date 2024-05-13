@@ -47,12 +47,12 @@ export async function login(event: H3Event): Promise<object> {
   const user = await auth.getUserByEmail(body.email);
   auth.createAccessToken(event, user.user_id);
 
-  const userCollections = await collection.getCollection(user.user_id);
+  const userCollections = await collection.getCollectionsByUserId(user.user_id);
 
   return createHttpResponse({
     status: 200,
     message: "User logged in",
-    data: { user: user, collection: userCollections},
+    data: { user: user, collection: userCollections },
   });
 }
 

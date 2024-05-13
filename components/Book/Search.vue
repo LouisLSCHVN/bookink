@@ -27,22 +27,23 @@ const state = reactive({
   message: "",
 });
 
-const { getBookByTitle } = useGoogleBooks();
 const handleSearchBooks = async () => {
   state.books = [];
-  const res = await getBookByTitle(search.value);
+  const res = await $fetch("/api/book/" + search.value, {
+    method: "GET",
+  });
   console.log(res);
-  if (!res.items) {
+  if (!res.data) {
     state.message = "No books found";
     return;
   }
-  state.books = res.items.map((book) => ({
+  state.books = res.data.map((book) => ({
     title: book.volumeInfo.title,
     author: book.volumeInfo.authors
       ? book.volumeInfo.authors.map((author) => author).join(", ")
       : "",
     id: book.id,
   }));
-  state.message = res.totalItems + " books found";
+  state.message = res.data.length + " books found";
 };
 </script>

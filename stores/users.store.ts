@@ -20,10 +20,22 @@ export const useUsers = defineStore("users", {
     async checkAuth(): Promise<Boolean> {
       const res = await this.fetchCurrent();
       if (!res) return false;
-      if (res.status !== 200 || !(res as any).data.user) return false;
+      if (res.status !== 200) return false;
       this.auth = true;
       console.log("check auth = " + this.auth, res);
       return true;
+    },
+    async logout(): Promise<Response> {
+      const res = await $fetch("/api/user/logout", {
+        credentials: "include",
+      });
+
+      console.log("logout", res);
+
+      if (res.status !== 200) return res;
+      this.auth = false;
+      this.data = [];
+      return res;
     },
   },
 });
