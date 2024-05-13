@@ -1,6 +1,7 @@
 import Book from "../classes/Book.class";
 import Collection from "../classes/Collection.class";
 import Like from "../classes/Like.class";
+import Payment from "../classes/Payment.class";
 import Review from "../classes/Review.class";
 import User from "../classes/user/User.class";
 import Mail from "../classes/utils/Mail.class";
@@ -75,3 +76,13 @@ export const like: Like = new Like();
  * @see Collection
  */
 export const collection: Collection = new Collection();
+
+/**
+ * Payment instance of the Payment class.
+ * @type {Payment}
+ * @public
+ * @static
+ * @memberof Payment
+ * @see Payment
+ */
+export const payment: Payment = new Payment();
