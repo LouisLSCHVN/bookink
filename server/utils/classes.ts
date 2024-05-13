@@ -26,12 +26,52 @@ export const session: Session = new Session();
  */
 export const mail: Mail = new Mail();
 
+/**
+ * User instance of the User class.
+ * @type {User}
+ * @public
+ * @static
+ * @memberof User
+ * @see User
+ */
 export const user: User = new User();
 
+/**
+ * Book instance of the Book class.
+ * @type {Book}
+ * @public
+ * @static
+ * @memberof Book
+ * @see Book
+ */
 export const book: Book = new Book();
 
+/**
+ * Review instance of the Review class.
+ * @type {Review}
+ * @public
+ * @static
+ * @memberof Review
+ * @see Review
+ */
 export const review: Review = new Review();
 
-export const like = new Like();
+/**
+ * Like instance of the Like class.
+ * @type {Like}
+ * @public
+ * @static
+ * @memberof Like
+ * @see Like
+ */
+export const like: Like = new Like();
 
-export const collection = new Collection();
+/**
+ * Collection instance of the Collection class.
+ * @type {Collection}
+ * @public
+ * @static
+ * @memberof Collection
+ * @see Collection
+ */
+export const collection: Collection = new Collection();
