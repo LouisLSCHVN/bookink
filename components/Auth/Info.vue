@@ -8,6 +8,7 @@
   <h1>
     Auth ? <kbd>{{ user.auth }}</kbd>
   </h1>
+  <PremiumBuy />
 </template>
 <script setup>
 const user = useUsers();

@@ -15,8 +15,14 @@ export const checkout = async (event: H3Event) => {
 
   const user_id = authUser.user_id;
 
-  const lemonPayment = $fetch(
+  console.log("Payment", payment.LEMON_URL + "checkouts");
+  console.log("checkOutOptions", payment.checkOutOptions(user_id));
+
+  const lemonPayment = await $fetch(
     payment.LEMON_URL + "checkouts",
     payment.checkOutOptions(user_id)
   );
+  console.log("lemonPayment", lemonPayment);
+  console.log(lemonPayment);
+  return lemonPayment;
 };
